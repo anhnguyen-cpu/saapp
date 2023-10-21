@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-import { doc, setDoc } from "firebase/firestore"; 
+import { collection, addDoc } from "firebase/firestore"; 
 import { db } from '../../config/firestore'
 
-const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, getEmployees,handleHomePage }) => {
-  const id = selectedEmployee.id;
+const DataRecord = ({ employees, setEmployees, setIsAdding, getEmployees ,handleHomePage }) => {
+  const [stid, setstid] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthDate, setbirthDate] = useState('');
+  const [address, setaddress] = useState('');
+  const [password, setpassword] = useState('');
 
-  const [stid, setstid] = useState(selectedEmployee.stid);
-  const [firstName, setFirstName] = useState(selectedEmployee.firstName);
-  const [lastName, setLastName] = useState(selectedEmployee.lastName);
-  const [birthDate, setbirthDate] = useState(selectedEmployee.birthDate);
-  const [address, setaddress] = useState(selectedEmployee.address);
-  const [password, setpassword] = useState(selectedEmployee.password);
-
-  const handleUpdate = async (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
 
     if (!stid || !firstName || !lastName || !birthDate || !address || !password) {
@@ -26,8 +24,7 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, getEmpl
       });
     }
 
-    const employee = {
-      id,
+    const newEmployee = {
       stid,
       firstName,
       lastName,
@@ -36,19 +33,25 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, getEmpl
       password,
     };
 
-    // TODO: Update document
-    await setDoc(doc(db, "Student", id), {
-      ...employee
-    });
+    employees.push(newEmployee);
+
+    // TODO: Add doc to DB
+    try {
+      await addDoc(collection(db, "Student"), {
+        ...newEmployee
+      });
+    } catch (error) {
+      console.log(error)
+    }
 
     setEmployees(employees);
-    setIsEditing(false);
+    setIsAdding(false);
     getEmployees();
 
     Swal.fire({
       icon: 'success',
-      title: 'Updated!',
-      text: `${employee.firstName} ${employee.lastName}'s data has been updated.`,
+      title: 'Added!',
+      text: `${firstName} ${lastName}'s data has been Added.`,
       showConfirmButton: false,
       timer: 1500,
     });
@@ -56,9 +59,9 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, getEmpl
 
   return (
     <div className="small-container">
-      <form onSubmit={handleUpdate}>
-        <h1>Edit Student</h1>
-        <label htmlFor="stid">Student ID</label>
+      <form onSubmit={handleAdd}>
+        <h1>DataRecord</h1>
+        <label htmlFor="stid">ID Student</label>
         <input
           id="stid"
           type="text"
@@ -107,7 +110,7 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, getEmpl
           onChange={e => setpassword(e.target.value)}
         />
         <div style={{ marginTop: '30px' }}>
-          <input type="submit" value="Update" />
+          <input type="submit" value="Add" />
           <input
             style={{ marginLeft: '12px' }}
             className="muted-button"
@@ -121,4 +124,4 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing, getEmpl
   );
 };
 
-export default Edit;
+export default DataRecord;

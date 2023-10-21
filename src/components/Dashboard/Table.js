@@ -2,11 +2,11 @@ import React from 'react';
 
 const Table = ({ employees, handleEdit, handleDelete, handleDetail }) => {
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: null,
-  });
+  // const formatter = new Intl.NumberFormat('en-US', {
+  //   style: 'currency',
+  //   currency: 'USD',
+  //   minimumFractionDigits: null,
+  // });
 
   return (
     <div className="contain-table">
