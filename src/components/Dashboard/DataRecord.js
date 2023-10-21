@@ -60,7 +60,8 @@ const DataRecord = ({ employees, setEmployees, setIsAdding, getEmployees ,handle
   return (
     <div className="small-container">
       <form onSubmit={handleAdd}>
-        <h1>DataRecord</h1>
+        {/* test */}
+        <h1>DataRecord </h1>
         <label htmlFor="stid">ID Student</label>
         <input
           id="stid"
