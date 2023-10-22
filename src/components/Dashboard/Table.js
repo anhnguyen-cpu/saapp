@@ -36,7 +36,8 @@ const Table = ({ employees, handleEdit, handleDelete, handleDetail }) => {
                 <td>{employee.password} </td>
                 <td className="text-center">
                   <button
-                    onClick={() => handleDetail(employee.id)}
+                    // onClick={() => handleDetail(employee.id)}
+                    onClick={handleDetail}
                     className="button muted-button"
                   >
                     Detail

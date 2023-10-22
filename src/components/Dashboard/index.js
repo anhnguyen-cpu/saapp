@@ -10,6 +10,7 @@ import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../config/firestore";
 import Activity from "./Activity";
 import DataRecord from "./DataRecord";
+import Detail from "./Detail";
 
 const Dashboard = ({ setIsAuthenticated }) => {
   const [employees, setEmployees] = useState();
@@ -18,6 +19,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isActivity, setIsActivity] = useState(null);
   const [isRecordData, setIsRecordData] = useState(null);
+  const [isDetails, setIsDetails] = useState(null);
 
   const getEmployees = async () => {
     const querySnapshot = await getDocs(collection(db, "Student"));
@@ -38,7 +40,9 @@ const Dashboard = ({ setIsAuthenticated }) => {
     setSelectedEmployee(employee);
     setIsEditing(true);
   };
-
+const handleDetail =()=>{
+  setIsDetails(true)
+}
   const handleDelete = (id) => {
     Swal.fire({
       icon: "warning",
@@ -80,10 +84,11 @@ const Dashboard = ({ setIsAuthenticated }) => {
     setIsActivity(false);
     setIsEditing(false);
     setIsAdding(false);
+    setIsDetails(false)
   };
   return (
     <div className="container">
-      {!isAdding && !isEditing && !isActivity && !isRecordData && (
+      {!isAdding && !isEditing && !isActivity && !isRecordData && !isDetails &&(
         <>
           <Header
             setIsAdding={setIsAdding}
@@ -95,6 +100,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
             employees={employees}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            handleDetail={handleDetail}
           />
         </>
       )}
@@ -106,6 +112,9 @@ const Dashboard = ({ setIsAuthenticated }) => {
           getEmployees={getEmployees}
           handleHomePage={handleHomePage}
         />
+      )}
+      {isDetails &&(
+        <Detail handleHomePage={handleHomePage}/>
       )}
       {isActivity && (
         <Activity
