@@ -1,133 +1,72 @@
 import React, { useState } from "react";
-import Swal from "sweetalert2";
+const Activity = ({ handleHomePage }) => {
+  const [activities, setActivities] = useState([
+    { id: 1, name: "Activity 1", detail: "Details for Activity 1" },
+    { id: 2, name: "Activity 2", detail: "Details for Activity 2" },
+    { id: 3, name: "Activity 3", detail: "Details for Activity 3" },
+  ]);
 
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../config/firestore";
+  const [showEdit, setShowEdit] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState(null);
 
-const Activity = ({ employees, setEmployees, setIsAdding, getEmployees ,handleHomePage}) => {
-  const [stid, setstid] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [birthDate, setbirthDate] = useState("");
-  const [address, setaddress] = useState("");
-  const [password, setpassword] = useState("");
-
-  const handleAdd = async (e) => {
-    e.preventDefault();
-
-    if (
-      !stid ||
-      !firstName ||
-      !lastName ||
-      !birthDate ||
-      !address ||
-      !password
-    ) {
-      return Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: "All fields are required.",
-        showConfirmButton: true,
-      });
-    }
-
-    const newEmployee = {
-      stid,
-      firstName,
-      lastName,
-      birthDate,
-      address,
-      password,
-    };
-
-    employees.push(newEmployee);
-
-    // TODO: Add doc to DB
-    try {
-      await addDoc(collection(db, "Student"), {
-        ...newEmployee,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-
-    setEmployees(employees);
-    setIsAdding(false);
-    getEmployees();
-
-    Swal.fire({
-      icon: "success",
-      title: "Added!",
-      text: `${firstName} ${lastName}'s data has been Added.`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+  const handleEdit = () => {
+    setShowEdit(true);
   };
 
+ const  handleCreateActivity = () => {};
+  const handleManageActivity = () => {
+    setShowEdit(false);
+  };
   return (
-    <div className="small-container">
-      <form onSubmit={handleAdd}>
-        <h1>Add Activity</h1>
-        <label htmlFor="stid">ID Student</label>
-        <input
-          id="stid"
-          type="text"
-          name="stid"
-          value={stid}
-          onChange={(e) => setstid(e.target.value)}
-        />
-        <label htmlFor="firstName">First Name</label>
-        <input
-          id="firstName"
-          type="text"
-          name="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <label htmlFor="lastName">Last Name</label>
-        <input
-          id="lastName"
-          type="text"
-          name="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <label htmlFor="birthDate">BirthDate</label>
-        <input
-          id="birthDate"
-          type="date"
-          name="birthDate"
-          value={birthDate}
-          onChange={(e) => setbirthDate(e.target.value)}
-        />
-        <label htmlFor="address">Address</label>
-        <input
-          id="address"
-          type="text"
-          name="address"
-          value={address}
-          onChange={(e) => setaddress(e.target.value)}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="text"
-          name="password"
-          value={password}
-          onChange={(e) => setpassword(e.target.value)}
-        />
-        <div style={{ marginTop: "30px" }}>
-          <input type="submit" value="Add" />
-          <input
-            style={{ marginLeft: "12px" }}
-            className="muted-button"
-            type="button"
-            value="Cancel"
-            onClick={handleHomePage}
-          />
+    <>
+      <div className="small-container">
+        {!showEdit && (
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Detail</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activities.map((activity) => (
+                <tr key={activity.id}>
+                  <td>{activity.id}</td>
+                  <td>{activity.name}</td>
+                  <td>{activity.detail}</td>
+                  <td>
+                    <button onClick={handleEdit}>Edit</button>
+                  </td>
+                  <td>
+                    <button>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <div style={{display:'flex',gap:4}} className="">
+          <div className="p-2">
+            <button onClick={handleHomePage}>HomePage</button>
+          </div>
+          {!showEdit && (
+            <div className="p-2">
+              <button onClick={handleCreateActivity}>Create Activity</button>
+            </div>
+          )}
+          <div className="p-2">
+            {showEdit && (
+              <button onClick={handleManageActivity}>Manage Activity</button>
+            )}
+          </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      {showEdit && <span>test</span>}
+    </>
   );
 };
 
