@@ -109,10 +109,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
       )}
       {isActivity && (
         <Activity
-          employees={employees}
-          setEmployees={setEmployees}
-          setIsAdding={setIsAdding}
-          getEmployees={getEmployees}
           handleHomePage={handleHomePage}
         />
       )}
